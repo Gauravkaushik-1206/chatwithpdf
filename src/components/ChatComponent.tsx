@@ -7,7 +7,6 @@ import MessageList from "./MessageList";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { chat } from "@pinecone-database/pinecone/dist/assistant/data/chat";
 
 type props = {
   chatId: number

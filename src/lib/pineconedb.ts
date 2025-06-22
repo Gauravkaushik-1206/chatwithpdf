@@ -5,7 +5,7 @@ import {
   Document,
   RecursiveCharacterTextSplitter,
 } from "@pinecone-database/doc-splitter";
-import { getEmbeddings, getGeminiEmbeddings } from "./embeddings";
+import { getGeminiEmbeddings } from "./embeddings";
 import md5 from "md5";
 import { convertToAscii } from "./utils";
 
@@ -52,7 +52,7 @@ export async function loadS3IntoPinecone(file_key: string) {
 
   const namespace = convertToAscii(file_key);
 
-  const chunks = (array:any, batchSize = 200) => {
+  const chunks = (array: Vector[], batchSize = 200) => {
     const chunks = [];
 
     for (let i = 0; i < array.length; i += batchSize) {
@@ -101,6 +101,15 @@ export async function loadS3IntoPinecone(file_key: string) {
   // return flatDocs[0];
 }
 
+type Vector = {
+  id: string;
+  values: number[];
+  metadata: {
+    pageNumber: number;
+    text: string;
+  };
+}
+
 async function embedDocument(doc: Document) {
   try {
     // const embeddings = await getEmbeddings(doc.pageContent);
@@ -114,7 +123,7 @@ async function embedDocument(doc: Document) {
         pageNumber: doc.metadata.pageNumber,
         text: doc.metadata.text,
       },
-    };
+    } as Vector;
   } catch (error) {
     console.error("Error embedding document:", error);
     throw error;
@@ -127,7 +136,8 @@ export const truncateStringByBytes = (str: string, bytes: number) => {
 };
 
 async function prepareDocumnet(page: PDFPage) {
-  let { pageContent, metadata } = page;
+  let { pageContent } = page;
+  const metadata  = page.metadata;
   pageContent = pageContent.replace(/\n/g, "");
   //split the docs
   const splitter = new RecursiveCharacterTextSplitter();

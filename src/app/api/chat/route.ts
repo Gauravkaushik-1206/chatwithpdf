@@ -135,7 +135,6 @@ import { streamText } from "ai";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { Message } from "@ai-sdk/react";
-import { chat } from "@pinecone-database/pinecone/dist/assistant/data/chat";
 
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
@@ -191,7 +190,7 @@ export async function POST(req: NextRequest) {
         prompt,
         ...messages.filter((message: Message) => message.role === "user"),
       ],
-      onFinish: async (result: any) => {
+      onFinish: async (result) => {
         console.log("AI response:", result.text);
         await db.insert(_messages).values({
           chatId: chatId,
