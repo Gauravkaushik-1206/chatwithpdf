@@ -6,7 +6,6 @@ import { chats } from "@/lib/db/schema";
 import { checkSubscription } from "@/lib/subscription";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
-import { check } from "drizzle-orm/gel-core";
 import { redirect } from "next/navigation";
 
 export default async function ChatPage({params}: {params: Promise<{ chatid: string }>}) {
