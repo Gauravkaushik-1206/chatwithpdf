@@ -4,12 +4,18 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { MessageCircle, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import axios from "axios";
+import SubscriptionButton from "./SubscriptionButton";
 
 type props = {
     chats: DrizzleChat[],
     chatid: number,
+    isPro?: boolean
 }
-export default function ChatSidebar({chats, chatid}: props) {
+export default function ChatSidebar({chats, chatid, isPro}: props) {
+    const [loading, setLoading] = useState(false);
+    
     return (
         <div className="w-full h-screen p-4 text-gray-200 bg-gray-900">
              <Link href="/">
@@ -41,6 +47,7 @@ export default function ChatSidebar({chats, chatid}: props) {
                     <Link href='/'>Source</Link>
                     {/* stripe Button */}
                  </div>
+                 <SubscriptionButton isPro={isPro ?? false}></SubscriptionButton>
              </div>
         </div>
     )

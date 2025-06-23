@@ -3,8 +3,10 @@ import ChatSidebar from "@/components/ChatSidebar";
 import PDFViewer from "@/components/PDFViewer";
 import { db } from "@/lib/db";
 import { chats } from "@/lib/db/schema";
+import { checkSubscription } from "@/lib/subscription";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
+import { check } from "drizzle-orm/gel-core";
 import { redirect } from "next/navigation";
 
 export default async function ChatPage({params}: {params: Promise<{ chatid: string }>}) {
@@ -25,13 +27,14 @@ export default async function ChatPage({params}: {params: Promise<{ chatid: stri
     }
 
     const currentChat = _chats.find((chat) => chat.id === parseInt(chatid));
+    const isPro = await checkSubscription(); 
 
     return (
         <div className="flex max-h-screen overflow-scroll">
             <div className="flex w-full max-h-screen overflow-scroll">
                 {/* chat sidebar */}
                 <div className="flex-[1] max-w-xs">
-                    <ChatSidebar chats={_chats} chatid={parseInt(chatid)} />
+                    <ChatSidebar chats={_chats} chatid={parseInt(chatid)} isPro={isPro}/>
 
                 </div>
                 {/* pdf viewer */}
